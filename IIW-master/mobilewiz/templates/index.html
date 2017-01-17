@@ -1,0 +1,58 @@
+{% load staticfiles %}
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/typeaheadjs.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <script type="text/javascript" src=" {% static "/js/typeahead.bundle.js" %}"></script>
+    <script type="text/javascript">
+
+        var searchResults = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: '/search/?q=',
+            remote: {
+                url: '/search/?q=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+        $(document).ready(function () {
+
+            setInterval(function(){
+                var randImage = Math.floor(Math.random() * 3) + 1;
+                var imagePath = "url('/static/images/mobileWiz"+ randImage + ".jpg')";
+                $('.body-background').css('background-image', imagePath);
+            },2000)
+            $('#searchBox').typeahead(null, {
+                display: 'modelName',
+                source: searchResults,
+                templates: {
+                    suggestion: function (data) {
+                        return "<a href=" + data.url + ">" + data.modelName + "</a>"
+                    }
+                }
+            });
+        });
+
+    </script>
+</head>
+<body>
+<div class="body-background"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="mobwiz-header text-center">
+            <h1 class="mobwiz-heading" style="font-size: 40px;  font-weight: bold;" >MobileWiz</h1>
+            <h3 class="mobwiz-description">Your ultimate destination to find the best deals on the latest smartphones. </h3>
+        </div>
+        <div id="remote">
+            <input class="typeahead" type="text" placeholder="Search your phone here.Ex: iPhone 6s" id="searchBox">
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
